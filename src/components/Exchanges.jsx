@@ -4,17 +4,25 @@ import { server } from "../index"
 import { Container, HStack, VStack } from '@chakra-ui/react'
 import Loader from './Loader'
 import { Text, Heading, Image } from '@chakra-ui/react'
+import ErrorComponent from './ErrorComponent'
 const Exchanges = () => {
     const [exchanges, setExchanges] = useState([])
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false)
     useEffect(() => {
         const fetchExchanges = async () => {
-            const { data } = await axios.get(`${server}/exchanges`);
-            setExchanges(data)
-            setLoading(false)
+            try {
+                const { data } = await axios.get(`${server}/exchanges`);
+                setExchanges(data)
+                setLoading(false)
+            } catch (error) {
+                setError(true)
+                setLoading(false)
+            }
         }
         fetchExchanges()
-    }, [])
+    }, []);
+    if(error) return <ErrorComponent message = {"Error while Fetching exchanges"}/> 
 
 
     return (
@@ -36,9 +44,11 @@ const Exchanges = () => {
 const ExchangeCard = ({ name, img, rank, url }) =>
     <a href={url} target={"blank"}>
         <VStack w={"52"} shadow={"lg"} p="8" borderRadius={"lg"} transition={"all 0.3s"} m={"4"}
-        css={{"&:hover":{
-            transform:"scale(1.2)"
-        }}}
+            css={{
+                "&:hover": {
+                    transform: "scale(1.2)"
+                }
+            }}
         >
             <Image src={img} w={"10"} h={"10"} objectFit={"contain"} alt={"exchange"} />
             <Heading size={"md"} noOfLines={1}>{rank}</Heading>
