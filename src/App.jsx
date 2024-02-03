@@ -5,7 +5,7 @@ import Coins from "./components/Coins"
 import Exchanges from "./components/Exchanges"
 import Home from "./components/Home"
 import CoinDetails from "./components/CoinDetails"
-
+//main part
 function App() {
   return (
     <Router>
